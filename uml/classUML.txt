@@ -1,0 +1,25 @@
+@startuml
+class Backend
+{
+	-DataFrame tweets
+	-{field}FlaskApp
+
+	-getTweetsByWoeid(uint_64 woeid) : DataFrame
+	-analyzeSentiment(DataFrame tweets) : DataFrame
+	-getTopics(DataFrame tweets) : DataFrame
+	-updateFlaskServer(secondsToWaitBeforeUpdate) : void
+
+}
+
+class FlaskOrDjango
+{
+	
+}
+
+class FrontEnd
+{
+	{field} What framework do you want?
+}
+
+Backend *-- FlaskOrDjango
+@enduml
