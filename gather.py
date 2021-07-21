@@ -2,9 +2,9 @@ from twarc import Twarc
 from copy import copy
 import pandas
 
-class gather():
+class Gather():
     def __init__(self, csv_path = None):
-        self._twarc = twarc.Twarc()
+        self._twarc = Twarc()
         self.columns = [
             'id',
             'text',
@@ -14,14 +14,14 @@ class gather():
         if csv_path != None:
             self._training_set = pandas.read_csv(
                 csv_path, 
-                delimiter=',')
+                delimiter='\r\t')
         else:
-            self._training_set = pandas.DataFame()
+            self._training_set = pandas.DataFrame()
 
 
 
     def newTweets(self, lat, lng, trend_count = 1, limit = 50):
-        woeid = self._twarc.trends_closest(lat,lng)
+        woeid = self.__closest_woeid(lat,lng)
         trends = self.__trends(woeid, trend_count)
         tweets = self.__search(trends, lat, lng, limit)
         return tweets
@@ -29,13 +29,19 @@ class gather():
 
 
     def training_tweets(self):
-        return self._training_set
+        return copy.copy(self._training_set)
+
+
+    def __closest_woeid(self,lat,lng):
+        closest = self._twarc.trends_closest(lat, lng)
+        woeid = closest[0]['woeid']
+        return woeid
 
 
 
-    def __trends(woeid, trend_count):
+    def __trends(self, woeid, trend_count):
         trends = []
-        json_trends = self.twarc_place(woeid)
+        json_trends = self._twarc.trends_place(woeid)
         for i in range(trend_count):
             trends.append(
                     json_trends[0]['trends'][i]['name'])
@@ -44,24 +50,33 @@ class gather():
 
 
     def __search(self, trends, lat, lng, limit):
-        tweets = pandas.DataFrame(
-            columns = self.columns)
+        tweets = pandas.DataFrame(columns = self.columns)
         for trend in trends:
             count = 0;
-            for tweet in self._twarc.search(trend):
+            for tweet in self._twarc.search(
+                    trend, 
+                    geocode = self.__geocode(lat,lng)):
                 if count < limit:
-                    tweets.append(self.__entry(tweet, trend, lat, lng))
-                else
+                    print(self.__entry(tweet, trend, lat, lng))
+                    tweets = tweets.append(self.__entry(tweet, trend, lat, lng), ignore_index=True)
+                else:
                     break
+                count += 1
+
+        print(tweets)
         return tweets
+
+
+    def __geocode(self,lat, lng):
+        return str(lat)+','+str(lng)+','+'100mi'
 
 
 
     def __entry(self, tweet, trend, lat, lng):
         a_series = [
             tweet['id_str'],
-            tweet['full_text']
+            tweet['full_text'],
             str(lat),
             str(lng),
             trend]
-        return pandas.Series(a_series, index=self.columns)
+        return a_series
