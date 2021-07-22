@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Map</title>
+    <!-- <script src="script.js"></script> -->
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+      *{
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var loc = {lat: 0, lng: 0};
+        var map = new google.maps.Map(document.getElementById("map"),{
+          zoom: 4,
+          canter: loc
+        });
+        // var marker = new google.map.marker({
+        //   position: loc,
+        //   map: map
+        // });
+      }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4Ksps5H1IIJImjvp9VRc9F91KztOLMkg&callback=initMap">
+
+    </script>
+  </body>
+</html>
+
