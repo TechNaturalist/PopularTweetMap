@@ -9,12 +9,13 @@ class Gather():
             'id',
             'text',
             'latitude',
-            'longitue', 
+            'longitude', 
             'trend']
         if csv_path != None:
             self._training_set = pandas.read_csv(
                 csv_path, 
-                delimiter='\r\t')
+                delimiter='\t',
+                index_col=False)
         else:
             self._training_set = pandas.DataFrame()
 
@@ -29,7 +30,7 @@ class Gather():
 
 
     def training_tweets(self):
-        return copy.copy(self._training_set)
+        return copy(self._training_set)
 
 
     def __closest_woeid(self,lat,lng):
@@ -57,13 +58,10 @@ class Gather():
                     trend, 
                     geocode = self.__geocode(lat,lng)):
                 if count < limit:
-                    print(self.__entry(tweet, trend, lat, lng))
                     tweets = tweets.append(self.__entry(tweet, trend, lat, lng), ignore_index=True)
                 else:
                     break
                 count += 1
-
-        print(tweets)
         return tweets
 
 
@@ -73,10 +71,10 @@ class Gather():
 
 
     def __entry(self, tweet, trend, lat, lng):
-        a_series = [
-            tweet['id_str'],
-            tweet['full_text'],
-            str(lat),
-            str(lng),
-            trend]
+        a_series = {
+            'id': str(tweet['id_str']),
+            'text': str(tweet['full_text']),
+            'latitude': str(lat),
+            'longitude': str(lng),
+            'trend': str(trend)}
         return a_series
