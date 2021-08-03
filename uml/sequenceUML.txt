@@ -1,0 +1,25 @@
+@startuml
+
+skinparam maxAsciiMessageLength 30
+
+actor User order 1
+participant FrontEnd order 2
+participant BackEnd order 3
+
+User -> FrontEnd : Hover over state
+
+FrontEnd -> BackEnd : GET REQUEST
+
+BackEnd -> FrontEnd : JSON with stateData
+
+note right of BackEnd
+occurs in the background
+updates every sequence of time
+(maybe 5 minutes)
+end note
+
+BackEnd -> BackEnd : getTweetsByWoeid()\nanalyzeSentiment()\ngetTopics()\nupdateServer()
+
+FrontEnd -> User : Update Display
+
+@enduml
