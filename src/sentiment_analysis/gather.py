@@ -53,7 +53,7 @@ class Gather():
     def __search(self, trends, lat, lng, limit):
         tweets = pandas.DataFrame(columns = self.columns)
         for trend in trends:
-            count = 0;
+            count = 0
             for tweet in self._twarc.search(
                     trend, 
                     geocode = self.__geocode(lat,lng)):
