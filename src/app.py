@@ -11,9 +11,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template(
-        "index.html"
-    )
+  return render_template(
+    "index.html"
+  )
 
 @app.route("/trends", methods=["GET"])
 def get_trends(trend_count = 1, limit = 50):
@@ -26,6 +26,7 @@ def get_trends(trend_count = 1, limit = 50):
 
   #gatherer = Gather()
   #sentiment_analyzer = SentimentAnalyzer()
+
   #tweets = gatherer.newTweets(latitude, longitude, trend_count, limit)
   #tweets = sentiment_analyzer.add_sentiment_scores(tweets)
 
@@ -33,7 +34,7 @@ def get_trends(trend_count = 1, limit = 50):
   test_sentiment = TweetSentiment()
   test_sentiment.trending_keyword = 'olympics'
   test_sentiment.major_topics = [ 'gold', 'silver', 'bronze' ]
-  test_sentiment.num_negative_tweets = 100
+  test_sentiment.num_positive_tweets = 100
   test_sentiment.num_negative_tweets = 10
   sentiments = [
     test_sentiment.get_data()

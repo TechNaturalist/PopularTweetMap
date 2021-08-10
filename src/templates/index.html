@@ -14,7 +14,7 @@
     </style>
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
+    <h3>NLP Tweet Map</h3>
     <div id="map"></div>
     <script>
       function initMap() {
@@ -28,10 +28,8 @@
 
         let location_string = ''
         let infoWindow = new google.maps.InfoWindow({
-          content: content_string,
           position: {lat: 41, lng: -102}
         });
-        infoWindow.open(map);
 
         map.addListener("click", (mapsMouseEvent) => {
           infoWindow.close();
@@ -41,7 +39,6 @@
           infoWindow = new google.maps.InfoWindow({
             position: mapsMouseEvent.latLng,
           });
-
 
           /*this gets the actual address*/
           /*  
@@ -56,30 +53,30 @@
           }); 
           */
 
-          infoWindow.setContent(
-
-            content_string +
-            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2) +
-            location_string /* this won't return anything if the geocoder is commented out. I'm just not sure if we'll need it*/
-          );
-          infoWindow.open(map);
-
           fetch(`/trends?latitude=${latLng.lat()}&longitude=${latLng.lng()}`)
           .then(response => response.json())
-          .then(data => console.log(data));
-        });
-        
-     
-
+          .then(data => {
       
-      var content_string = '<div id="content">' + 
-                          '<div id="siteNotice">' + 
-                          "</div>" + 
-                          '<h1 id = "placeHeading" class="placeHeading"> Place Goes Here </h1>' + 
-                          '<div id = "sentimentContent">' + 
-                          "<p> Sentiment analysis goes here </p>" + 
-                          '</div>' + 
-                          '</div>';
+            let content_string = '<div id="content">' +
+              '<div id="siteNotice">' +
+              "</div>" +
+              `<h1 id = "placeHeading" class="placeHeading">Trending here: ${data[0]['trending_keyword']}</h1>` +
+              '<div id = "sentimentContent">' +
+              `<p>Positive tweets: ${data[0]['num_positive_tweets']}</p>` +
+              `<p>Negative tweets: ${data[0]['num_negative_tweets']}</p>` +
+              `<p>Topics: ${data[0].major_topics.join(", ")}</p>` +
+              `<p>Location: Latitude=${latLng.lat()}, Longitude=${latLng.lng()}</p>` +
+              '</div>' +
+              '</div>';
+
+            infoWindow.setContent(
+              content_string +
+              location_string /* this won't return anything if the geocoder is commented out. I'm just not sure if we'll need it*/
+            );
+            infoWindow.open(map);
+
+          });
+        });
 
       }
     </script>
