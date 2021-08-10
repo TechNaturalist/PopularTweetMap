@@ -24,7 +24,9 @@ def get_trends(latitude, longitude, trend_count = 1, limit = 50):
   tweets = gatherer.newTweets(latitude, longitude, trend_count, limit)
   tweets = sentiment_analyzer.add_sentiment_scores(tweets)
 
-  return ""
+  ## do some logic to get a list of TweetSentiment out of tweets
+  sentiments = []
+  return sentiments
 
 
 if __name__ == '__main__':
