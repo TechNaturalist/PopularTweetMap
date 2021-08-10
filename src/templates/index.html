@@ -60,11 +60,11 @@
             let content_string = '<div id="content">' +
               '<div id="siteNotice">' +
               "</div>" +
-              `<h1 id = "placeHeading" class="placeHeading">Trending here: ${data[0]['trending_keyword']}</h1>` +
+              `<h1 id = "placeHeading" class="placeHeading">Trending here: ${data['trending_keyword']}</h1>` +
               '<div id = "sentimentContent">' +
-              `<p>Positive tweets: ${data[0]['num_positive_tweets']}</p>` +
-              `<p>Negative tweets: ${data[0]['num_negative_tweets']}</p>` +
-              `<p>Topics: ${data[0].major_topics.join(", ")}</p>` +
+              `<p>Positive tweets: ${data['num_positive_tweets']}</p>` +
+              `<p>Negative tweets: ${data['num_negative_tweets']}</p>` +
+              `<p>Topics: ${data.major_topics.join(", ")}</p>` +
               `<p>Location: Latitude=${latLng.lat()}, Longitude=${latLng.lng()}</p>` +
               '</div>' +
               '</div>';

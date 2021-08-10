@@ -19,12 +19,8 @@ nltk.download('stopwords')
 
 stop_words = set(stopwords.words('english'))
 
-# For testing from assigment
-tweets = pd.read_pickle('new_4.pkl')
-
 # This needs work since it still lets through some garbage input
 def tokenize(s):
-  #re_url = re.compile(re.compile(r'(https?:\/\/[www\.]?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}\b[-a-zA-Z0-9@:%_\+.~#?&//=]*)'))
   re_url = re.compile(r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)')
   re_hashtag = re.compile(r'\B#\w*[a-zA-Z]+\w*')
   re_emoji = re.compile(r'[\U00010000-\U0010ffff]', flags=re.UNICODE)
@@ -62,11 +58,13 @@ def topics(l):
 
   for i in range(len(order_centroids)):
     print("Cluster %d:" % i, end='')
-    for ind in order_centroids[i, :15]:
+    for ind in order_centroids[i, :5]:
       print(' %s' % feature_names[ind], end=',')
       print()
+  
+  return feature_names
 
-def process(df):
+def process_topics(df):
   df = df.sort_values(by='id')
   df = df.drop_duplicates(['id'])
 
@@ -76,6 +74,4 @@ def process(df):
     for lemma in lemmas:
       agg.append(lemma)
 
-  topics(agg)
-
-process(tweets)
+  return topics(agg)

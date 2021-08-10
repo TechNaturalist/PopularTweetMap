@@ -6,6 +6,7 @@ from flask import jsonify
 from sentiment_analysis.gather import Gather
 from sentiment_analysis.sentiment_analyzer import SentimentAnalyzer
 from sentiment_analysis.TweetSentiment import TweetSentiment
+from topic_model import process_topics
 
 app = Flask(__name__)
 
@@ -29,6 +30,7 @@ def get_trends(trend_count = 1, limit = 50):
 
   #tweets = gatherer.newTweets(latitude, longitude, trend_count, limit)
   #tweets = sentiment_analyzer.add_sentiment_scores(tweets)
+  #topics = process_topics(tweets)
 
   ## do some logic to get a list of TweetSentiment out of tweets
   test_sentiment = TweetSentiment()
@@ -36,10 +38,8 @@ def get_trends(trend_count = 1, limit = 50):
   test_sentiment.major_topics = [ 'gold', 'silver', 'bronze' ]
   test_sentiment.num_positive_tweets = 100
   test_sentiment.num_negative_tweets = 10
-  sentiments = [
-    test_sentiment.get_data()
-  ]
-  return jsonify(sentiments)
+  sentiment = test_sentiment.get_data()
+  return jsonify(sentiment)
 
 
 if __name__ == '__main__':
