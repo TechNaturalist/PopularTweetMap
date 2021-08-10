@@ -36,6 +36,8 @@
         map.addListener("click", (mapsMouseEvent) => {
           infoWindow.close();
 
+          let latLng = mapsMouseEvent.latLng;
+
           infoWindow = new google.maps.InfoWindow({
             position: mapsMouseEvent.latLng,
           });
@@ -61,6 +63,10 @@
             location_string /* this won't return anything if the geocoder is commented out. I'm just not sure if we'll need it*/
           );
           infoWindow.open(map);
+
+          fetch(`/trends?latitude=${latLng.lat()}&longitude=${latLng.lng()}`)
+          .then(response => response.json())
+          .then(data => console.log(data));
         });
         
      
