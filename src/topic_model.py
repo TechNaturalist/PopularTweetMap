@@ -38,7 +38,10 @@ def tokenize(s):
 
   return word_tokenize(s)
 
-  def lemmatize(s):
+def lemmatize(s):
+  if s == None:
+    return None
+
   lemmas = []
   wordnet_lemmatizer = WordNetLemmatizer()
   for word in s:
@@ -48,6 +51,9 @@ def tokenize(s):
       return lemmas
 
 def topics(l):
+  if l == None:
+    return None
+
   tfidf = TfidfVectorizer()
   tfs = tfidf.fit_transform(l)
   feature_names = tfidf.get_feature_names()
@@ -70,7 +76,7 @@ def process_topics(df):
 
   agg = []
   for index, row in df.iterrows():
-    lemmas = lemmatize(tokenize(row.full_text))
+    lemmas = lemmatize(tokenize(row['text']))
     for lemma in lemmas:
       agg.append(lemma)
 

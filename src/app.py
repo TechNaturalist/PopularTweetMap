@@ -25,12 +25,13 @@ def get_trends(trend_count = 1, limit = 50):
   if longitude == None:
     abort(Response("Longitude is required, but wasn't provided."))
 
-  #gatherer = Gather()
-  #sentiment_analyzer = SentimentAnalyzer()
+  gatherer = Gather("../21_07_22.csv")
+  sentiment_analyzer = SentimentAnalyzer()
 
+  tweets = gatherer.training_tweets()
   #tweets = gatherer.newTweets(latitude, longitude, trend_count, limit)
-  #tweets = sentiment_analyzer.add_sentiment_scores(tweets)
-  #topics = process_topics(tweets)
+  tweets = sentiment_analyzer.add_sentiment_scores(tweets)
+  topics = process_topics(tweets)
 
   ## do some logic to get a list of TweetSentiment out of tweets
   test_sentiment = TweetSentiment()
