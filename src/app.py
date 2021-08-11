@@ -1,3 +1,4 @@
+from typing import List
 from flask import Flask, render_template, abort, Response
 from flask.helpers import url_for
 from flask import request
@@ -6,7 +7,7 @@ from flask import jsonify
 from sentiment_analysis.gather import Gather
 from sentiment_analysis.sentiment_analyzer import SentimentAnalyzer
 from sentiment_analysis.TweetSentiment import TweetSentiment
-from topic_model import process_topics
+from topic_model import get_sentiments_from_tweets
 
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ def home():
   )
 
 @app.route("/trends", methods=["GET"])
-def get_trends(trend_count = 1, limit = 50):
+def get_trends(trend_count = 5, limit = 100):
   latitude = request.args.get('latitude')
   longitude = request.args.get('longitude')
   if latitude == None:
@@ -25,25 +26,19 @@ def get_trends(trend_count = 1, limit = 50):
   if longitude == None:
     abort(Response("Longitude is required, but wasn't provided."))
 
-  gatherer = Gather("../21_07_22.csv")
+  gatherer = Gather()
   sentiment_analyzer = SentimentAnalyzer()
 
   tweets = gatherer.training_tweets()
-  #tweets = gatherer.newTweets(latitude, longitude, trend_count, limit)
+  tweets = gatherer.newTweets(latitude, longitude, trend_count, limit)
   tweets = sentiment_analyzer.add_sentiment_scores(tweets)
-  topics = process_topics(tweets)
+  sentiments: List[TweetSentiment] = get_sentiments_from_tweets(tweets)
 
-  ## do some logic to get a list of TweetSentiment out of tweets
-  test_sentiment = TweetSentiment()
-  test_sentiment.trending_keyword = 'olympics'
-  test_sentiment.major_topics = [ 'gold', 'silver', 'bronze' ]
-  test_sentiment.num_positive_tweets = 100
-  test_sentiment.num_negative_tweets = 10
-  sentiment = test_sentiment.get_data()
-  return jsonify(sentiment)
+  json_sentiments = jsonify([s.get_data() for s in sentiments])
+  return json_sentiments
 
 
 if __name__ == '__main__':
-    # app.run(debug = True)
-    with app.test_request_context():
-      print(url_for('get_trends', latitude=20.20202, longitude=15.0203))
+    app.run(debug = True)
+    # with app.test_request_context():
+    #   print(url_for('get_trends', latitude=20.20202, longitude=15.0203))

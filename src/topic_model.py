@@ -1,3 +1,4 @@
+from typing import List
 import pandas as pd
 import re
 import json
@@ -12,6 +13,8 @@ from nltk import pos_tag
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.cluster import KMeans
+
+from sentiment_analysis.TweetSentiment import TweetSentiment
 
 nltk.download('punkt')
 nltk.download('wordnet')
@@ -67,18 +70,34 @@ def topics(l):
     for ind in order_centroids[i, :5]:
       print(' %s' % feature_names[ind], end=',')
       print()
-  
+
   return feature_names
 
-def process_topics(df):
+def get_sentiments_from_tweets(df):
   df = df.sort_values(by='id')
   df = df.drop_duplicates(['id'])
 
-  agg = []
+  sentiments = dict()
   for index, row in df.iterrows():
-    lemmas = lemmatize(tokenize(row['text']))
-    if lemmas != None:
-      for lemma in lemmas:
-        agg.append(lemma)
+    row_lemmas = lemmatize(tokenize(row['text']))
+    if row['trend'] not in sentiments:
+      sentiments[row['trend']] = TweetSentiment()
+      sentiments[row['trend']].trending_keyword = row['trend']
 
-  return topics(agg)
+    if row_lemmas != None:
+      sentiments[row['trend']].lemmas.extend(row_lemmas)
+
+    neg = row['neg']
+    pos = row['pos']
+
+    if pos > 0.5:
+      sentiments[row['trend']].num_positive_tweets = sentiments[row['trend']].num_positive_tweets + 1
+    elif neg > 0.5:
+      sentiments[row['trend']].num_negative_tweets = sentiments[row['trend']].num_negative_tweets + 1
+    else:
+      sentiments[row['trend']].num_neutral_tweets = sentiments[row['trend']].num_neutral_tweets + 1
+
+  for trend, sentiment in sentiments.items():
+    sentiment.major_topics = topics(sentiment.lemmas)
+
+  return list(sentiments.values())
