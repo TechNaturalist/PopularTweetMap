@@ -67,10 +67,10 @@ def topics(l):
   km.fit(tfs)
   order_centroids = km.cluster_centers_.argsort()[:, ::-1]
 
-  for i in range(len(order_centroids)):
-    for ind in order_centroids[i, :5]:
-      print(' %s' % feature_names[ind], end=',')
-      print()
+  # for i in range(len(order_centroids)):
+    # for ind in order_centroids[i, :5]:
+      # print(' %s' % feature_names[ind], end=',')
+      # print()
 
   if len(feature_names) > 5:
     feature_names = feature_names[:5]
