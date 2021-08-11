@@ -40,5 +40,3 @@ def get_trends(trend_count = 5, limit = 100):
 
 if __name__ == '__main__':
     app.run(debug = True)
-    # with app.test_request_context():
-    #   print(url_for('get_trends', latitude=20.20202, longitude=15.0203))
