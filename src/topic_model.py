@@ -28,6 +28,7 @@ def tokenize(s):
   re_hashtag = re.compile(r'\B#\w*[a-zA-Z]+\w*')
   re_emoji = re.compile(r'[\U00010000-\U0010ffff]', flags=re.UNICODE)
   re_punctuation = re.compile(r'[,.!?@\'\"`]')
+  re_handles = re.compile(r'@[\w]*')
 
   urls = re_url.findall(s)
   hashtags = re_hashtag.findall(s)
@@ -36,6 +37,7 @@ def tokenize(s):
   s = re.sub(re_url,'',s)
   s = re.sub(re_hashtag,'',s)
   s = re.sub(re_emoji,'',s)
+  s = re.sub(re_handles, '', s)
   s = re.sub(re_punctuation, '', s)
   s = s.lower()
 
@@ -51,7 +53,7 @@ def lemmatize(s):
     if word not in stop_words:
       lemmatized = wordnet_lemmatizer.lemmatize(word)
       lemmas.append(lemmatized)
-      return lemmas
+  return lemmas
 
 def topics(l):
   if l == None:
@@ -66,10 +68,12 @@ def topics(l):
   order_centroids = km.cluster_centers_.argsort()[:, ::-1]
 
   for i in range(len(order_centroids)):
-    print("Cluster %d:" % i, end='')
     for ind in order_centroids[i, :5]:
       print(' %s' % feature_names[ind], end=',')
       print()
+
+  if len(feature_names) > 5:
+    feature_names = feature_names[:5]
 
   return feature_names
 
