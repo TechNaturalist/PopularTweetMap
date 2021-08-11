@@ -37,7 +37,7 @@ def tokenize(s):
   s = re.sub(re_url,'',s)
   s = re.sub(re_hashtag,'',s)
   s = re.sub(re_emoji,'',s)
-  s = re.sub(re_handles, '', s)
+  # s = re.sub(re_handles, '', s)
   s = re.sub(re_punctuation, '', s)
   s = s.lower()
 
