@@ -1,84 +1,15 @@
-  
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Add Map</title>
-    <!-- <script src="script.js"></script> -->
-    <!-- <link rel="stylesheet" href="styles.css"> -->
-    <style>
-      
-      #map {
-        height: 600px;
-        width: 100%;
-      }
-    </style>
+    <title>Tweet Map</title>
+    <script src="static/script.js"></script>
+    <link rel="stylesheet" href="static/site.css">
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
+    <h3>NLP Tweet Map</h3>
     <div id="map"></div>
-    <script>
-      function initMap() {
-        var options = {
-          zoom: 4,
-          center: {lat: 41, lng: -102}
-        }
-        
-        var map = new google.maps.Map(document.getElementById("map"),options);
-        var geocoder = new google.maps.Geocoder();
-
-        let location_string = ''
-        let infoWindow = new google.maps.InfoWindow({
-          content: content_string,
-          position: {lat: 41, lng: -102}
-        });
-        infoWindow.open(map);
-
-        map.addListener("click", (mapsMouseEvent) => {
-          infoWindow.close();
-
-          infoWindow = new google.maps.InfoWindow({
-            position: mapsMouseEvent.latLng,
-          });
-
-
-          /*this gets the actual address*/
-          /*  
-          geocoder.geocode({
-            'latLng': mapsMouseEvent.latLng
-          }, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-              if(results[0]){
-                location_string = results[0].formatted_address;
-              }
-            }
-          }); 
-          */
-
-          infoWindow.setContent(
-
-            content_string +
-            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2) +
-            location_string /* this won't return anything if the geocoder is commented out. I'm just not sure if we'll need it*/
-          );
-          infoWindow.open(map);
-        });
-        
-     
-
-      
-      var content_string = '<div id="content">' + 
-                          '<div id="siteNotice">' + 
-                          "</div>" + 
-                          '<h1 id = "placeHeading" class="placeHeading"> Place Goes Here </h1>' + 
-                          '<div id = "sentimentContent">' + 
-                          "<p> Sentiment analysis goes here </p>" + 
-                          '</div>' + 
-                          '</div>';
-
-      }
-    </script>
+    <div id="data"></div>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcLDUA_VF2aKEAWpLNG43UW7YxFfh00mw&callback=initMap">
-
     </script>
   </body>
 </html>
