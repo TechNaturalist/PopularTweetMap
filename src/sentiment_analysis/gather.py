@@ -4,7 +4,6 @@ import pandas
 
 class Gather():
     def __init__(self, csv_path = None):
-        self._twarc = Twarc()
         self.columns = [
             'id',
             'text',
@@ -17,6 +16,7 @@ class Gather():
                 delimiter='\t',
                 index_col=False)
         else:
+            self._twarc = Twarc()
             self._training_set = pandas.DataFrame()
 
 

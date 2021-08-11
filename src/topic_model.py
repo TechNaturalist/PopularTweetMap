@@ -77,7 +77,8 @@ def process_topics(df):
   agg = []
   for index, row in df.iterrows():
     lemmas = lemmatize(tokenize(row['text']))
-    for lemma in lemmas:
-      agg.append(lemma)
+    if lemmas != None:
+      for lemma in lemmas:
+        agg.append(lemma)
 
   return topics(agg)
