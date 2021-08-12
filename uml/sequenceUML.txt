@@ -6,7 +6,7 @@ actor User order 1
 participant FrontEnd order 2
 participant BackEnd order 3
 
-User -> FrontEnd : Hover over state
+User -> FrontEnd : Press over Region
 
 FrontEnd -> BackEnd : GET REQUEST
 
