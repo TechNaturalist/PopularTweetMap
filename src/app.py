@@ -29,7 +29,6 @@ def get_trends(trend_count = 5, limit = 100):
   gatherer = Gather()
   sentiment_analyzer = SentimentAnalyzer()
 
-  tweets = gatherer.training_tweets()
   tweets = gatherer.newTweets(latitude, longitude, trend_count, limit)
   tweets = sentiment_analyzer.add_sentiment_scores(tweets)
   sentiments: List[TweetSentiment] = get_sentiments_from_tweets(tweets)

@@ -38,46 +38,44 @@ function initMap() {
     fetch(`/trends?latitude=${latLng.lat()}&longitude=${latLng.lng()}`)
       .then(response => response.json())
       .then(data => {
-
-        let content_string = '<div id="content">' +
-          // '<div id="siteNotice">' +
-          // "</div>" +
-          // `<h1 id = "placeHeading" class="placeHeading">Trending here: ${data['trending_keyword']}</h1>` +
-          // '<div id = "sentimentContent">' +
-          // `<p>Positive tweets: ${data['num_positive_tweets']}</p>` +
-          // `<p>Negative tweets: ${data['num_negative_tweets']}</p>` +
-          // `<p>Topics: ${data.major_topics.join(", ")}</p>` +
-          // `<p>Location: Latitude=${latLng.lat()}, Longitude=${latLng.lng()}</p>` +
-          // '</div>' +
-          '</div>';
-
-        var content_string2 = '<table id="trend-table" style="width:100%">' +
-          '<tr>' +
-          '<th>Trend</th>' +
-          '<th>Positive Tweets</th>' +
-          '<th>Negative Tweets</th>' +
-          '<th>Topics</th>' +
-          '<th>Location</th>' +
-          '</tr>';
-
-        for (let trend of data) {
-          let row = '<tr>' +
-            `<td>${trend['trending_keyword']}</td>` +
-            `<td>${trend['num_positive_tweets']}</td>` +
-            `<td>${trend['num_negative_tweets']}</td>` +
-            `<td>${trend['major_topics'].join(", ")}</td>` +
-            `<td>Latitude=${latLng.lat()}, Longitude=${latLng.lng()}</td>` +
-            '</tr>';
-          content_string2 += row;
-        }
-
-        content_string2 += "</table>"
-
-        document.getElementById('data').innerHTML = content_string2;
-        infoWindow.setContent(content_string);
+        document.getElementById('data').innerHTML = getTableContent(data);
+        infoWindow.setContent(getPopupContent(data, latLng));
         infoWindow.open(map);
-
       });
   });
+}
 
+function getPopupContent(data, latLng) {
+  let trends = data.map(d => d['trending_keyword']).join(", ");
+
+  return '<div id="content">' +
+    '<div id="siteNotice">' +
+    "</div>" +
+    `<h1 id = "placeHeading" class="placeHeading">Trending here: ${trends}</h1>` +
+    '<div id = "sentimentContent">' +
+    `<p>Location: Latitude=${latLng.lat()}, Longitude=${latLng.lng()}</p>` +
+    '</div>' +
+    '</div>';
+}
+
+function getTableContent(data) {
+  var content = '<table id="trend-table" style="width:100%">' +
+    '<tr>' +
+    '<th>Trend</th>' +
+    '<th>Positive Tweets</th>' +
+    '<th>Negative Tweets</th>' +
+    '<th>Topics</th>' +
+    '</tr>';
+
+  for (let trend of data) {
+    let row = '<tr>' +
+      `<td>${trend['trending_keyword']}</td>` +
+      `<td>${trend['num_positive_tweets']}</td>` +
+      `<td>${trend['num_negative_tweets']}</td>` +
+      `<td>${trend['major_topics'].join(", ")}</td>` +
+      '</tr>';
+    content += row;
+  }
+
+  return content + "</table>";
 }
