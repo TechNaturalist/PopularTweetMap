@@ -4,7 +4,6 @@ import pandas
 
 class Gather():
     def __init__(self, csv_path = None):
-        self._twarc = Twarc()
         self.columns = [
             'id',
             'text',
@@ -17,6 +16,7 @@ class Gather():
                 delimiter='\t',
                 index_col=False)
         else:
+            self._twarc = Twarc()
             self._training_set = pandas.DataFrame()
 
 
@@ -53,7 +53,7 @@ class Gather():
     def __search(self, trends, lat, lng, limit):
         tweets = pandas.DataFrame(columns = self.columns)
         for trend in trends:
-            count = 0;
+            count = 0
             for tweet in self._twarc.search(
                     trend, 
                     geocode = self.__geocode(lat,lng)):
